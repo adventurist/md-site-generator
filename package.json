@@ -1,0 +1,12 @@
+{
+  "name": "logicp-wiki",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "fuse.js": "^7.0.0"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  }
+}
