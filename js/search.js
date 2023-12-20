@@ -11,13 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
       searchInput.addEventListener('input', function () {
         const query = searchInput.value.toLowerCase();
         const results = search(query, searchIndex);
-        console.log(marked)
         // Clear previous results
         resultsContainer.innerHTML = '';
 
         // Display new results
         results.forEach(function (result) {
-          console.log(result.item)
           const content = document.createElement('div');
           const li = document.createElement('li');
           const a  = document.createElement('a')
