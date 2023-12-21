@@ -1,39 +1,41 @@
-const render = marked.marked
+const fetch_exception = e => console.error('Error fetching search index')
+const render          = marked.marked
+const search_url      = '/search-index.json'
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', async () =>
+{
+  const input     = document.getElementById('search-input')
+  const container = document.getElementById('results')
+  const response  = await fetch(search_url).catch(fetch_exception)
 
-document.addEventListener('DOMContentLoaded', function () {
-  const searchInput = document.getElementById('search-input');
-  const resultsContainer = document.getElementById('results');
+  if (!response || !response.ok)
+    throw new Error("Failed to fetch search index")
 
-  // Fetch the search index
-  fetch('/search-index.json')
-    .then(response => response.json())
-    .then(searchIndex => {
-      searchInput.addEventListener('input', function () {
-        const query = searchInput.value.toLowerCase();
-        const results = search(query, searchIndex);
-        // Clear previous results
-        resultsContainer.innerHTML = '';
+  const data = await response.json()
 
-        // Display new results
-        results.forEach(function (result) {
-          const content = document.createElement('div');
-          const li = document.createElement('li');
-          const a  = document.createElement('a')
-          a.appendChild(document.createTextNode(result.item.title))
-          a.href = result.item.url
-          li.innerHTML = render(result.item.content)
-          resultsContainer.appendChild(a)
-          resultsContainer.appendChild(li);
-        });
-      });
+  //------------
+  input.addEventListener('input', async () =>
+  {
+    const results       = search(input.value.toLowerCase(), data)
+    container.innerHTML = ''
+
+    results.forEach(result =>
+    {
+      const content = document.createElement('div');
+      const li      = document.createElement('li');
+      const a       = document.createElement('a')
+      a.href        = result.item.url
+      li.innerHTML  = render(result.item.content)
+
+      a        .appendChild(document.createTextNode(result.item.title))
+      container.appendChild(a)
+      container.appendChild(li);
     })
-    .catch(error => console.error('Error fetching search index:', error));
-
-  function search(query, data) {
-    const options = {
-      keys: ['title', 'content'],
-    };
-    const fuse = new Fuse(data, options); // Create an empty Fuse object
-    return fuse.search(query);
-  }
-});
+  })
+})
+//-------------------------------------------------------------------
+function search (query, data)
+{
+  return new Fuse(data, { keys: ['title', 'content'] }).search(query)
+}
