@@ -1,9 +1,6 @@
 const fetch_exception = e => console.error('Error fetching search index')
 const render          = marked.marked
 const search_url      = '/search-index.json'
-const fuse_options    = { keys: ['title', 'content'],
-                          threshold: 0.8,
-                          caseSensitive: false }
 //-------------------------------------------------------------------
 //-------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', async () =>
@@ -16,23 +13,23 @@ document.addEventListener('DOMContentLoaded', async () =>
     throw new Error("Failed to fetch search index")
 
   const data           = await response.json()
-  const fuse           = new Fuse(data, fuse_options)
   const do_search      = query =>
   {
     if (!query) return
 
-    const results       = fuse.search(query)
+    const words         = query.split(/\s+/)
+    const search_pred   = item => { return words.every((word) => get_text(item).includes(word)) }
+    const results       = data.filter(search_pred);
     container.innerHTML = ''
 
-    results.forEach(result =>
+    results.forEach(item =>
     {
       const content = document.createElement('div')
       const li      = document.createElement('li')
       const a       = document.createElement('a')
-      a.href        = result.item.url
-      li.innerHTML  = render(result.item.content)
-
-      a        .appendChild(document.createTextNode(result.item.title))
+      a.href        = item.url
+      li.innerHTML  = render(item.content)
+      a        .appendChild(document.createTextNode(item.url))
       container.appendChild(a)
       container.appendChild(li)
     })
@@ -52,3 +49,5 @@ function debounce (fn, ms)
     timer = setTimeout(() => { fn(...args) }, ms)
   }
 }
+//-------------------------------------------------------------------
+function get_text(item) { return `${item.url} ${item.title} ${item.content}`.toLowerCase() }
