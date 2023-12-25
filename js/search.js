@@ -1,4 +1,4 @@
-const fetch_exception = e => console.error('Error fetching search index')
+const fetch_exception = e => console.error('Error fetching search index', e)
 const render          = marked.marked
 const search_url      = '/search-index.json'
 //-------------------------------------------------------------------
