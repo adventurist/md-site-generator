@@ -6,6 +6,7 @@ const search_url      = '/search-index.json'
 document.addEventListener('DOMContentLoaded', async () =>
 {
   const input     = document.getElementById('search-input')
+  const viewbtn   = document.getElementById('toggle-button')
   const container = document.getElementById('results')
   const response  = await fetch(search_url).catch(fetch_exception)
 
@@ -25,18 +26,48 @@ document.addEventListener('DOMContentLoaded', async () =>
     results.forEach(item =>
     {
       const content = document.createElement('div')
+      const prev    = document.createElement('div');
       const li      = document.createElement('li')
       const a       = document.createElement('a')
       a.href        = item.url
-      li.innerHTML  = render(item.content)
+      prev.innerHTML    = item.content.length > 300 ? `${item.content.substring(0, 300)}...` : item.content
+      content.innerHTML = render(item.content)
+
+      li     .classList.add('collapsible')
+      li     .classList.add('collapsed')
+      prev   .classList.add('preview')
+      prev   .classList.add('visible')
+      content.classList.add('content')
+
       a        .appendChild(document.createTextNode(item.url))
-      container.appendChild(a)
+      li       .appendChild(a)
+      li       .appendChild(prev)
+      li       .appendChild(content)
       container.appendChild(li)
+
+        li.addEventListener('click', () =>
+        {
+          li  .classList.toggle('collapsed')
+          prev.classList.toggle('collapsed')
+        })
     })
   }
   const delayed_search = debounce(do_search, 400)
   //------------
   input.addEventListener('input', async () => { delayed_search(input.value.toLowerCase()) })
+
+  viewbtn.addEventListener('click', () =>
+  {
+    document.querySelectorAll('.collapsible').forEach((item) =>
+    {
+      item.classList.toggle('collapsed')
+    })
+    document.querySelectorAll('.preview').forEach((item) =>
+    {
+      item.classList.toggle('collapsed')
+      item.classList.toggle('visible')
+    })
+  })
 })
 //-------------------------------------------------------------------
 function debounce (fn, ms)

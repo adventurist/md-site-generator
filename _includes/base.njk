@@ -8,45 +8,76 @@
   <script src="https://cdn.jsdelivr.net/npm/marked"></script>
   <title>{{ title | default("My Static Site") }}</title>
   <style>
-  code {
-    white-space : pre-wrap !important;
-  }
-  code.language-What {
-    white-space: pre-wrap; !important;
-  }
-  pre code {
-    white-space: pre-wrap; !important;
-  }
-  body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #1e1e1e; /* Dark background color */
-    color: #ffffff; /* Light text color */
-  }
+    code {
+      white-space : pre-wrap;
+    }
 
-  #results {
-    list-style-type: none;
-    padding: 0;
-  }
+    code.language-What {
+      white-space: pre-wrap;
+    }
 
-  #results li {
-    margin-bottom: 20px;
-    background-color: #2d2d2d; /* Darker background color for each result */
-    padding: 10px;
-    border-radius: 5px;
-  }
+    pre code {
+      white-space: pre-wrap;
+    }
 
-  #results a {
-    color: #61dafb; /* Link color */
-  }
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e1e;           /* Dark background color */
+      color: #ffffff;                      /* Light text color */
+    }
+
+    #results {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #results li {
+      margin-bottom: 20px;
+      background-color: #2d2d2d;           /* Darker background color for each result */
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    #results a {
+      color: #61dafb;                       /* Link color */
+    }
+
+    .collapsible {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      background-color: #2d2d2d;
+      color: #ffffff;
+    }
+
+    .collapsible.collapsed .content {
+      display: none;
+    }
+
+    .preview {
+      max-height: 100px; /* Adjust the maximum height as needed */
+      overflow: hidden;
+    }
+
+    .preview.collapsed {
+      display: none;
+    }
+
+    .content {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>{{ title | default("My Static Site") }}</h1>
+    <h1>{{ title | default("White Pilling") }}</h1>
   </header>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <main>
     {{ content | safe }}
   </main>
