@@ -2,12 +2,10 @@ const fs   = require('fs')
 const Fuse = require('fuse.js')
 const keys = ['title', 'content', 'url']
 //----------------------------------------------------------------------------
-module.exports = config =>
+module.exports = function (eleventyConfig)
 {
-  config.setTemplateFormats(['md', 'njk'])
-  config.addLayoutAlias('default', '_includes/base.njk')
-  config.addPassthroughCopy("js")
-  config.addFilter('searchIndex', async collection =>
+  eleventyConfig.addPassthroughCopy("js")
+  eleventyConfig.addFilter('searchIndex', async collection =>
   {
     const index = await Promise.all(collection.map(async item => (
     {
@@ -23,8 +21,8 @@ module.exports = config =>
     return data.toJSON()
   })
   //-------------------------
-  config.addCollection('searchIndex', async collection =>
+  eleventyConfig.addCollection('searchIndex', async collection =>
   {
-    return await config.getFilter('searchIndex')(collection.getAll());
+    return await eleventyConfig.getFilter('searchIndex')(collection.getAll());
   })
 }
