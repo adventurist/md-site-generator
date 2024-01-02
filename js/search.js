@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () =>
     if (!query) return
 
     const words         = query.split(/\s+/)
-    const search_pred   = item => { const text = get_text(item); return words.every((word) => .includes(word)) }
+    const search_pred   = item => { const text = get_text(item); return words.every((word) => text.includes(word)) }
     const results       = data.filter(search_pred)
     container.innerHTML = ''
 
